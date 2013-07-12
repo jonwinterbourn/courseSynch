@@ -219,7 +219,7 @@ function renderList(courses) {
             $('ul#clusters-listview').append('<li><a href="#">' + course.courseName + '</a></li>');//.listview('refresh');
         }
     });
-    $('div.span12 ul').listview('refresh');
+    $('div.span12 ul#clusters-listview').listview();
     //$('ul').listview("refresh");
     //$('ul').listview().trigger("create");
     
