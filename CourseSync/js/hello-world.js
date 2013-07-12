@@ -21,6 +21,8 @@ $('#sync').on('click', function() {
 
 $('#render').on('click', function() {
     renderList();
+    
+    
 });
 
 $('#clearLog').on('click', function() {
@@ -75,7 +77,7 @@ window.dao =  {
             this.txErrorHandler,
             function() {
                 log('Table courses successfully CREATED in local SQLite database');
-                callback();
+                //callback();
             }
         );
     },
@@ -206,14 +208,21 @@ function renderList(courses) {
     dao.findAll(function(courses) {
         $('#list').empty();
         var l = courses.length;
+        //if (l>0) {
+            //remove list items
+            $('ul#clusters-listview').empty();    
+        //}
+        
         for (var i = 0; i < l; i++) {
             var course = courses[i];
             //$('#list').append('<tr>' +
-            $('#clusters-listview').append('' + 
-                //'<td>' + course.id + '</td>' +
-                '<li>' +course.courseName + '</li>');
+            $('ul#clusters-listview').append('<li><a href="#">' + course.courseName + '</a></li>');//.listview('refresh');
         }
     });
+    $('div.span12 ul').listview('refresh');
+    //$('ul').listview("refresh");
+    //$('ul').listview().trigger("create");
+    
 }
 
 function log(msg) {
