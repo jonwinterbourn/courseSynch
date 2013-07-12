@@ -208,9 +208,10 @@ function renderList(courses) {
         var l = courses.length;
         for (var i = 0; i < l; i++) {
             var course = courses[i];
-            $('#list').append('<tr>' +
+            //$('#list').append('<tr>' +
+            $('#clusters-listview').append('' + 
                 //'<td>' + course.id + '</td>' +
-                '<td>' +course.courseName + '</td></tr>');
+                '<li>' +course.courseName + '</li>');
         }
     });
 }
