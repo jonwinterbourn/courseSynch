@@ -20,6 +20,7 @@ function onDeviceReady() {
     
     $('#clearLog').on('click', function() {
         $('#log').val('');
+        //log.empty();
     });
         
     $('ul#courses-listview').on("click", 'li', function(event){
@@ -37,7 +38,7 @@ window.dao =  {
 
     initialize: function(callback) {
         var self = this;
-        this.db = window.openDatabase("syncdemodb", "1.0", "Sync Demo DB", 200000);
+        this.db = window.openDatabase("syncdemodb", "1.0", "Sync Demo DB", 2000000);
 
         // Testing if the table exists is not needed and is here for logging purpose only. We can invoke createTable
         // no matter what. The 'IF NOT EXISTS' clause will make sure the CREATE statement is issued only if the table
@@ -67,7 +68,7 @@ window.dao =  {
                     "CREATE TABLE IF NOT EXISTS courses ( " +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "courseName VARCHAR(150), " +
-                    "bannerCode VARCHAR(20), " +
+                    "bannerCode INTEGER, " +
                     "registryCode VARCHAR(20), " +
                     "ucasCode VARCHAR(10), " +
                     "contentId INTEGER, " +
@@ -200,7 +201,7 @@ window.dao =  {
                 var e;
                 for (var i = 0; i < l; i++) {
                     e = courses[i];
-                    log(e.CourseName + ' ' + e.ContentId + e.CourseSummary + e.BannerCode);// + ' ' + e.deleted + ' ' + e.lastModified);
+                    log(e.CourseName + ' ' + e.ContentId);// + ' ' + e.deleted + ' ' + e.lastModified);
                     var params = [e.CourseName, e.ContentId, e.CourseSummary, e.BannerCode];//, e.officePhone, e.deleted, e.lastModified];
                     tx.executeSql(sql, params);
                 }
