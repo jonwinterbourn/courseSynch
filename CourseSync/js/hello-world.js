@@ -38,7 +38,7 @@ window.dao =  {
 
     initialize: function(callback) {
         var self = this;
-        this.db = window.openDatabase("syncdemodb", "1.0", "Sync Demo DB", 2000000);
+        this.db = window.openDatabase("syncdemodb", "1.0", "Sync Demo DB", 20000000);
 
         // Testing if the table exists is not needed and is here for logging purpose only. We can invoke createTable
         // no matter what. The 'IF NOT EXISTS' clause will make sure the CREATE statement is issued only if the table
@@ -73,6 +73,13 @@ window.dao =  {
                     "ucasCode VARCHAR(10), " +
                     "contentId INTEGER, " +
                     "courseSummary TEXT, " +
+                    "duration VARCHAR(50), " +
+                    "placesAvailable VARCHAR(50), " +
+                    "typicalOffer VARCHAR(50), " +
+                    "startDate VARCHAR(50), " +
+                    "academicLevel VARCHAR(50), " +
+                    "courseUrl VARCHAR(150), " +
+                    "applyUrl VARCHAR(50), " +
                     "lastModified VARCHAR(50))";
                 tx.executeSql(sql);
             },
@@ -195,14 +202,14 @@ window.dao =  {
             function(tx) {
                 var l = courses.length;
                 var sql =
-                    "INSERT OR REPLACE INTO courses (courseName, contentId, courseSummary, bannerCode) " +
-                    "VALUES (?, ?, ?, ?)";
+                    "INSERT OR REPLACE INTO courses (courseName, contentId, courseSummary, bannerCode, registryCode, ucasCode, duration, placesAvailable, typicalOffer, startDate, academicLevel, courseUrl, applyUrl) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 log('Inserting or Updating in local database:');
                 var e;
                 for (var i = 0; i < l; i++) {
                     e = courses[i];
                     log(e.CourseName + ' ' + e.ContentId);// + ' ' + e.deleted + ' ' + e.lastModified);
-                    var params = [e.CourseName, e.ContentId, e.CourseSummary, e.BannerCode];//, e.officePhone, e.deleted, e.lastModified];
+                    var params = [e.CourseName, e.ContentId, e.CourseSummary, e.BannerCode, e.RegistryCode, e.UCASCode, e.Duration, e.PlacesAvailable, e.TypicalOffer, e.StartDate, e.AcademicLevel, e.CourseUrl, e.ApplyUrl];//, e.officePhone, e.deleted, e.lastModified];
                     tx.executeSql(sql, params);
                 }
                 log('Synchronization complete (' + l + ' items synchronized)');
@@ -240,7 +247,7 @@ function renderList(courses) {
         for (var i = 0; i < l; i++) {
             var course = courses[i];
             //$('#list').append('<tr>' +
-            $('ul#courses-listview').append('<li id="' + course.id + '"><a href="#courseDetail">' + course.courseName + ' (' + course.contentId + ')' + '</a></li>');
+            $('ul#courses-listview').append('<li id="' + course.id + '"><a href="#courseDetail">' + course.courseName + '</a></li>');
         }
     
     $('div.span12 ul#courses-listview').listview('refresh');
@@ -256,11 +263,14 @@ function renderCourseDetail(id) {
         var course = courses[0];
         $('#courseDetail-title').text(course.courseName);
         $('#courseDetail-summary').html(course.courseSummary);
-        //if (e.bannerCode !=null) {
+        //if (e.bannerCode >0 || e.bannerCode !=null) {
             $('#courseDetail-bannerCode').html('<span class="field-title">Banner Code: </span>' + course.bannerCode);
         //}
-        
-    })
+        $('#courseDetail-bannerCode').html('<span class="field-title">Banner Code: </span>' + course.bannerCode);
+        $('#courseDetail-registryCode').html('<span class="field-title">Registry Code: </span>' + course.registryCode);
+        $('#courseDetail-ucasCode').html('<span class="field-title">UCAS Code: </span>' + course.ucasCode);
+        $('#courseDetail-academicLevel').html('<span class="field-title">Level: </span>' + course.academicLevel);
+    });
 	
 };
 
