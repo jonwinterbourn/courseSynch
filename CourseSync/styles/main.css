@@ -331,3 +331,8 @@ div.span12 {
     /*padding:0.5em;*/
     
 }
+
+div.logArea textarea {
+    
+    overflow-y: auto;
+}

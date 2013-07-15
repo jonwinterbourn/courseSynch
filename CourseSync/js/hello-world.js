@@ -13,8 +13,8 @@ function onDeviceReady() {
     });
     
     
-
-
+    
+    
 $('#sync').on('click', function() {
     dao.sync(renderList);
 });
@@ -29,7 +29,13 @@ $('#clearLog').on('click', function() {
     $('#log').val('');
 });
     
-    }
+$('ul#courses-listview').on("click", 'li', function(event){
+        
+        id = $(this).attr("id");
+        renderCourseDetail(id);
+    });
+    
+}
 
 
 window.dao =  {
@@ -77,7 +83,7 @@ window.dao =  {
             this.txErrorHandler,
             function() {
                 log('Table courses successfully CREATED in local SQLite database');
-                //callback();
+                callback();
             }
         );
     },
@@ -100,6 +106,27 @@ window.dao =  {
             function(tx) {
                 var sql = "SELECT * FROM COURSES";
                 log('Local SQLite database: "SELECT * FROM COURSES"');
+                tx.executeSql(sql, this.txErrorHandler,
+                    function(tx, results) {
+                        var len = results.rows.length,
+                            courses = [],
+                            i = 0;
+                        for (; i < len; i = i + 1) {
+                            courses[i] = results.rows.item(i);
+                        }
+                        log(len + ' rows found');
+                        callback(courses);
+                    }
+                );
+            }
+        );
+    },
+    
+    find: function(id, callback) {
+        this.db.transaction(
+            function(tx) {
+                var sql = "SELECT * FROM COURSES where id =" +id;
+                log('Local SQLite database: "SELECT * FROM COURSES where id = "' + id);
                 tx.executeSql(sql, this.txErrorHandler,
                     function(tx, results) {
                         var len = results.rows.length,
@@ -210,25 +237,41 @@ function renderList(courses) {
         var l = courses.length;
         //if (l>0) {
             //remove list items
-            $('ul#clusters-listview').empty();    
+            $('ul#courses-listview').empty(); 
+            $('ul#courses-listview').append('<li data-role="list-divider">Courses</li>');
         //}
         
         for (var i = 0; i < l; i++) {
             var course = courses[i];
             //$('#list').append('<tr>' +
-            $('ul#clusters-listview').append('<li><a href="#">' + course.courseName + '</a></li>');//.listview('refresh');
+            $('ul#courses-listview').append('<li id="' + course.id + '"><a href="#courseDetail">' + course.courseName + '</a></li>');
         }
+    
+    $('div.span12 ul#courses-listview').listview('refresh');
     });
-    $('div.span12 ul#clusters-listview').listview();
-    //$('ul').listview("refresh");
-    //$('ul').listview().trigger("create");
     
 }
+
+
+
+
+function renderCourseDetail(id) {
+    dao.find(id, function(courses) {
+        var course = courses[0];
+        $('#courseDetail-title').text(course.courseName);
+    })
+	
+};
 
 function log(msg) {
     $('#log').val($('#log').val() + msg + '\n');
 }
 
+/*
+$("#courses-listview").listview('option', 'filterCallback', function( text, searchValue, item ){
+      return text.toString().toLowerCase().indexOf( searchValue ) === -1;
+    });
+*/
 // PhoneGap is ready
 
 /*

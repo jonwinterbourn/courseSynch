@@ -19,80 +19,94 @@
                 <h1>Test</h1>
             </div>
             <div data-role="content">
-                <!--<div class="input-area ch30"></div>-->
-                    <!--<input class="inputBox" type="text" id="course" placeholder="Add New Item" />-->
-                <!--    <button class="button" id="synchButton" onclick="synchCourses(); return false;">Synch</button>-->
-			    <!--</div>-->
-                <!--
-                <div class="result-area ch70">
-                    <div class="results">
-                        <div class="desc">Course List:</div>
-                        <ul id="courseItems"></ul>
-                    </div>
-                    <div class="separator"></div>
-                </div>
-                -->
-                
                 <div class="row">
-        <div class="span4">
-            <div class="well">
-                <a id="reset" href="#" data-icon="back" data-role="button"><!--<i class="icon-trash"></i>--> Reset Local Database</a>
+                    <div class="span4">
+                        <div class="well">
+                            <a id="reset" href="#" data-icon="back" data-role="button">Reset Local Database</a>
+                            <!--<p>Delete all rows from the employee table in the local SQLite database. Does not require network
+                            connectivity.</p>-->
+                        </div>
+                    </div>
+                    
+                    <div class="span4">
+                        <div class="well">
+                            <a id="sync"  href="#" data-icon="refresh" data-role="button"> Sync with Server</a>
+                            <!--<p>Get changes from server and update local database accordingly. Requires network connectivity.</p>-->
+                        </div>
+                    </div>
+                    
+                    <div class="span4">
+                        <div class="well">
+                            <a id="render" href="#" data-icon="grid" data-role="button"> Render List</a>
+                            <!--<p>Render the employee list using the data from the local SQLite database. Does not require network
+                            connectivity.</p>-->
+                        </div>
+                    </div>
+                    
+                    <div class="span4">
+                        <div class="well">
+                            <a id="logInfo" href="#logPage" data-icon="info" data-role="button"> Logs</a>
+                            <!--<p>Render the employee list using the data from the local SQLite database. Does not require network
+                            connectivity.</p>-->
+                        </div>
+                    </div>
+                </div>
+                <p>&nbsp;</p>
 
-                <!--<p>Delete all rows from the employee table in the local SQLite database. Does not require network
-                connectivity.</p>-->
+
+                <div class="row">
+                    <!-- replace with listView-->
+                    <div class="span12">
+                        <ul data-role="listview" id="courses-listview" data-filter="true" data-inset="true" class="ui-listview">
+                            <li data-role="list-divider">Courses</li>
+                        </ul>
+                    </div>
+                
+                </div>
+                
             </div>
-        </div>
-        <div class="span4">
-            <div class="well">
-                <a id="sync"  href="#" data-icon="refresh" data-role="button"> Sync with Server</a>
-                <!--<p>Get changes from server and update local database accordingly. Requires network connectivity.</p>-->
-            </div>
-        </div>
-        <div class="span4">
-            <div class="well">
-                <a id="render" href="#" data-icon="grid" data-role="button"> Render List</a>
 
-                <!--<p>Render the employee list using the data from the local SQLite database. Does not require network
-                connectivity.</p>-->
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="logArea">
-            Log:
-            <textarea id="log" style="width:99%" rows="5"></textarea>
-            <a id="clearLog" href="#" class="btn"><i class="icon-remove"></i> Clear Log</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- replace with listView-->
-        <div class="span12">
-            <ul data-role="listview" id="clusters-listview" data-inset="true" class="ui-listview">
-                <li data-role="list-divider">Courses</li>
-                <li><a href="#">a</a></li>
-		    </ul>
             
-            <!--
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>CourseName</th>
-                </tr>
-                </thead>
-                <tbody id="list"></tbody>
-            </table>
-            -->
-        </div>
-    </div>
-            </div>
             
             <div data-role="footer" data-position="fixed" data-id="oneFooter">
                 <span class="footerText">Built with Icenium&trade;</span>
             </div>
         </div>
         
+        <!--Course detail page-->
+        <div data-role="page" id="courseDetail" data-add-back-btn="true">
+            <div data-role="header">
+                <h1>Course Detail</h1>
+            </div>
+            <div data-role="content">
+                <ul data-role="listview" id="courseDetailList" data-inset="true">
+					<li class="center-wrapper" data-role="list-divider">
+						<span id="courseDetail-title"></span>
+					</li>
+                </ul>
+            </div>
+            
+            <div data-role="footer" data-position="fixed" data-id="oneFooter">
+                <span class="footerText">UoB Web Services Team</span>
+            </div>
+        </div>
+        
+        <div data-role="page" id="logPage" data-add-back-btn="true">
+            <div data-role="header">
+                <h1>Logs</h1>
+            </div>
+            <div data-role="content">
+                <div class="logArea">
+                    <a id="clearLog" href="#" class="btn"><i class="icon-remove"></i> Clear Log</a>
+                    <textarea id="log" style="width:99%" rows="12"></textarea>
+                    
+                </div>
+            </div>
+            
+            <div data-role="footer" data-position="fixed" data-id="oneFooter">
+                <span class="footerText">Built with Icenium&trade;</span>
+            </div>
+        </div>
         
     </body>
     </html>
