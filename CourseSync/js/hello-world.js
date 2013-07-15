@@ -1,8 +1,6 @@
-// JavaScript Document
-// Wait for PhoneGap to load
+
 document.addEventListener("deviceready", onDeviceReady, false);
-//document.addEventListener("deviceready", init, false);
-//document.addEventListener("touchstart", function() {}, false);
+
 
 function onDeviceReady() {
     
@@ -11,38 +9,30 @@ function onDeviceReady() {
            dao.createTable();
         });
     });
-    
-    
-    
-    
-$('#sync').on('click', function() {
-    dao.sync(renderList);
-});
 
-$('#render').on('click', function() {
-    renderList();
-    
-    
-});
-
-$('#clearLog').on('click', function() {
-    $('#log').val('');
-});
-    
-$('ul#courses-listview').on("click", 'li', function(event){
-        
-        id = $(this).attr("id");
-        renderCourseDetail(id);
+    $('#sync').on('click', function() {
+        dao.sync(renderList);
     });
     
+    $('#render').on('click', function() {
+        renderList();
+    });
+    
+    $('#clearLog').on('click', function() {
+        $('#log').val('');
+    });
+        
+    $('ul#courses-listview').on("click", 'li', function(event){
+            
+            id = $(this).attr("id");
+            renderCourseDetail(id);
+    });
+        
 }
-
+    
 
 window.dao =  {
 
-    //syncURL: "../api/employees",
-    //syncURL: "http://coenraets.org/offline-sync/api/employees?modifiedSince=2012-03-01%2010:20:56",
-    //syncURL: "http://www.birminghamdev1.bham.ac.uk/web_services/Staff.svc/",
     syncURL: "http://www.birmingham.ac.uk/web_services/courseservice.svc/json/courses",
 
     initialize: function(callback) {
@@ -77,6 +67,11 @@ window.dao =  {
                     "CREATE TABLE IF NOT EXISTS courses ( " +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "courseName VARCHAR(150), " +
+                    "bannerCode VARCHAR(20), " +
+                    "registryCode VARCHAR(20), " +
+                    "ucasCode VARCHAR(10), " +
+                    "contentId INTEGER, " +
+                    "courseSummary TEXT, " +
                     "lastModified VARCHAR(50))";
                 tx.executeSql(sql);
             },
@@ -199,14 +194,14 @@ window.dao =  {
             function(tx) {
                 var l = courses.length;
                 var sql =
-                    "INSERT OR REPLACE INTO courses (courseName) " +
-                    "VALUES (?)";
+                    "INSERT OR REPLACE INTO courses (courseName, contentId, courseSummary, bannerCode) " +
+                    "VALUES (?, ?, ?, ?)";
                 log('Inserting or Updating in local database:');
                 var e;
                 for (var i = 0; i < l; i++) {
                     e = courses[i];
-                    log(e.CourseName);// + ' ' + e.officePhone + ' ' + e.deleted + ' ' + e.lastModified);
-                    var params = [e.CourseName];//, e.officePhone, e.deleted, e.lastModified];
+                    log(e.CourseName + ' ' + e.ContentId + e.CourseSummary + e.BannerCode);// + ' ' + e.deleted + ' ' + e.lastModified);
+                    var params = [e.CourseName, e.ContentId, e.CourseSummary, e.BannerCode];//, e.officePhone, e.deleted, e.lastModified];
                     tx.executeSql(sql, params);
                 }
                 log('Synchronization complete (' + l + ' items synchronized)');
@@ -244,7 +239,7 @@ function renderList(courses) {
         for (var i = 0; i < l; i++) {
             var course = courses[i];
             //$('#list').append('<tr>' +
-            $('ul#courses-listview').append('<li id="' + course.id + '"><a href="#courseDetail">' + course.courseName + '</a></li>');
+            $('ul#courses-listview').append('<li id="' + course.id + '"><a href="#courseDetail">' + course.courseName + ' (' + course.contentId + ')' + '</a></li>');
         }
     
     $('div.span12 ul#courses-listview').listview('refresh');
@@ -259,6 +254,11 @@ function renderCourseDetail(id) {
     dao.find(id, function(courses) {
         var course = courses[0];
         $('#courseDetail-title').text(course.courseName);
+        $('#courseDetail-summary').html(course.courseSummary);
+        //if (e.bannerCode !=null) {
+            $('#courseDetail-bannerCode').html('<span class="field-title">Banner Code: </span>' + course.bannerCode);
+        //}
+        
     })
 	
 };
@@ -266,114 +266,5 @@ function renderCourseDetail(id) {
 function log(msg) {
     $('#log').val($('#log').val() + msg + '\n');
 }
-
-/*
-$("#courses-listview").listview('option', 'filterCallback', function( text, searchValue, item ){
-      return text.toString().toLowerCase().indexOf( searchValue ) === -1;
-    });
-*/
-// PhoneGap is ready
-
-/*
-function onDeviceReady() {
-    getLocation();
-    navigator.splashscreen.hide();
-}
-
-function getLocation() {
-    myNewFunction();
-}
-  
-function myNewFunction(){
-    navigator.geolocation.getCurrentPosition(onGeolocationSuccess, onGeolocationError);
-}
-*/  
-
-/*
-
-var app = {};
-app.db = null;
-
-app.openDb = function() {
-    if(window.sqlitePlugin !== undefined) {
-        app.db = window.sqlitePlugin.openDatabase("Courses");
-    } else {
-        // For debugin in simulator fallback to native SQL Lite
-        console.log("Use built in SQL Lite");
-        app.db = window.openDatabase("Courses", "1.0", "Cordova Demo", 200000);
-    }
-}
-      
-app.createTable = function() {
-	var db = app.db;
-	db.transaction(function(tx) {
-		tx.executeSql("CREATE TABLE IF NOT EXISTS courses(ID INTEGER PRIMARY KEY ASC, courseName TEXT, added_on DATETIME, last_modified VARCHAR(50))", []);
-	});
-}
-      
-app.addCourse = function(courseText) {
-	var db = app.db;
-	db.transaction(function(tx) {
-		var addedOn = new Date();
-		tx.executeSql("INSERT INTO courses(courseName, added_on) VALUES (?,?)",
-					  [courseText, addedOn],
-					  app.onSuccess,
-					  app.onError);
-	});
-}
-      
-app.onError = function(tx, e) {
-	alert("Error: " + e.message);
-} 
-      
-app.onSuccess = function(tx, r) {
-	app.refresh();
-}
-      
-app.deleteCourse = function(id) {
-	var db = app.db;
-	db.transaction(function(tx) {
-		tx.executeSql("DELETE FROM courses WHERE ID=?", [id],
-					  app.onSuccess,
-					  app.onError);
-	});
-}
-
-app.refresh = function() {
-	var renderCourse = function (row) {
-		return "<li>" + "<div class='course-check'></div>" + row.courseName + "<a class='button delete' href='javascript:void(0);'  onclick='app.deleteCourse(" + row.ID + ");'><p class='course-delete'></p></a>" + "<div class='clear'></div>" + "</li>";
-	}
-    
-	var render = function (tx, rs) {
-		var rowOutput = "";
-		var courseItems = document.getElementById("courseItems");
-		for (var i = 0; i < rs.rows.length; i++) {
-			rowOutput += renderCourse(rs.rows.item(i));
-		}
-      
-		courseItems.innerHTML = rowOutput;
-	}
-    
-	var db = app.db;
-	db.transaction(function(tx) {
-		tx.executeSql("SELECT * FROM courses", [], 
-					  render, 
-					  app.onError);
-	});
-}
-      
-function init() {
-    navigator.splashscreen.hide();
-	app.openDb();
-	app.createTable();
-	app.refresh();
-}
-      
-function addCourses() {
-	var course = document.getElementById("course");
-	app.addCourse(course.value);
-	course.value = "";
-}
-*/
 
 
