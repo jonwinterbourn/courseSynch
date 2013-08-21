@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    id="com.phonegap.plugins.sqlite"
+    version="1.0.0">
+
+    <name>SQLitePlugin</name>
+	
+    <engines>
+        <engine name="cordova" version=">=2.4.0" />
+    </engines>
+
+	<!-- android -->
+	<platform name="android">
+		<asset src="www/SQLitePlugin.android.js" target="Plugins/SQLite/SQLitePlugin.js" />
+		
+	    <!-- Cordova >= 2.0.0 -->
+	    <config-file target="res/xml/config.xml" parent="plugins">
+	        <plugin name="SQLitePlugin"
+	                value="com.phonegap.plugin.sqlitePlugin.SQLitePlugin"/>
+	    </config-file>
+    
+	    <source-file src="src/android/com/phonegap/plugin/sqlitePlugin/SQLitePlugin.java"
+	                 target-dir="src/com/phonegap/plugin/sqlitePlugin" />
+	</platform>
+
+    <!-- ios -->
+    <platform name="ios">
+		<asset src="www/SQLitePlugin.ios.js" target="Plugins/SQLite/SQLitePlugin.js" />
+                    
+        <!-- Cordova 2.5+ -->
+        <config-file target="config.xml" parent="plugins">
+                <plugin name="SQLitePlugin" value="SQLitePlugin"/>
+        </config-file>
+
+        <!-- Note: the ios src is based off src/ios implicitly --> 
+        <header-file src="src/ios/SQLitePlugin.h" />
+        <source-file src="src/ios/SQLitePlugin.m" />
+        <framework src="libsqlite3.dylib" />
+    </platform>
+</plugin>
